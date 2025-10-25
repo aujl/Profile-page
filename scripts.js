@@ -1,20 +1,21 @@
 (function () {
   const prefersReducedMotion = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
 
-  // Matrix particle effect
-  function initMatrixBackground() {
+  // Enhanced particle background with connections
+  function initParticleBackground() {
     if (prefersReducedMotion) return;
 
     const canvas = document.createElement('canvas');
-    canvas.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.15;';
-    document.body.appendChild(canvas);
+    canvas.id = 'particle-bg';
+    document.body.insertBefore(canvas, document.body.firstChild);
 
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const particleCount = Math.min(50, Math.floor(canvas.width / 20));
+    const particleCount = Math.min(80, Math.floor(canvas.width / 15));
+    const connectionDistance = 150;
 
     class Particle {
       constructor() {
@@ -22,50 +23,81 @@
         this.y = Math.random() * canvas.height;
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = Math.random() * 2 + 0.5;
-        this.life = Math.random() * 100 + 50;
-        this.maxLife = this.life;
+        this.size = Math.random() * 2 + 1;
+        this.color = `hsl(${270 + Math.random() * 30}, 100%, 50%)`; // Purple range
       }
 
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        this.life--;
 
+        // Bounce off edges
         if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
         if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+        // Keep in bounds
+        this.x = Math.max(0, Math.min(canvas.width, this.x));
+        this.y = Math.max(0, Math.min(canvas.height, this.y));
       }
 
       draw() {
-        const alpha = this.life / this.maxLife;
-        ctx.fillStyle = `rgba(0, 217, 255, ${alpha * 0.6})`;
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
+        
+        // Glow effect
+        ctx.strokeStyle = `rgba(181, 55, 242, 0.3)`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
       }
     }
 
+    // Initialize particles
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
-      particles.forEach((p, i) => {
+          if (distance < connectionDistance) {
+            const opacity = (1 - distance / connectionDistance) * 0.4;
+            ctx.strokeStyle = `rgba(181, 55, 242, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      // Dark background
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Update and draw particles
+      particles.forEach((p) => {
         p.update();
         p.draw();
-
-        if (p.life <= 0) {
-          particles[i] = new Particle();
-        }
       });
+
+      // Draw connections
+      drawConnections();
 
       requestAnimationFrame(animate);
     }
 
     animate();
 
+    // Handle window resize
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -237,7 +269,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    initMatrixBackground();
+    initParticleBackground();
     initNav();
     initTypedHeadline();
     populateRepositories();
