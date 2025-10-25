@@ -283,104 +283,78 @@ a:focus-visible {
 .hero__image {
   position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  perspective: 1000px;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
 }
 
-.hero__image img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: var(--radius-lg);
-  border: 2px solid var(--primary);
-  box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
-  animation: float 6s ease-in-out infinite;
+.glitch-wrapper {
   position: relative;
-  z-index: 2;
-}
-
-.hero__image .glitch-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   max-width: 400px;
-  height: 100%;
   border-radius: var(--radius-lg);
   border: 2px solid var(--primary);
   box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
-  z-index: 10;
-  opacity: 0;
-  animation: tv-static-glitch 5s ease-in-out infinite;
   overflow: hidden;
+  transform: var(--glitch-orientation, none);
+  filter: brightness(1) contrast(1.05);
+  animation: flicker 4s infinite steps(1, end);
+  background: rgba(15, 34, 64, 0.4);
+  z-index: 1;
 }
 
-.hero__image .glitch-layer img {
+.glitch-wrapper--nft {
+  --glitch-orientation: none;
+}
+
+.glitch-wrapper--mirrored {
+  --glitch-orientation: scaleX(-1);
+}
+
+.glitch-img {
+  display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--radius-lg);
-  animation: none;
+  border-radius: inherit;
+  filter: contrast(1.1) saturate(1.2);
+  position: relative;
+  z-index: 1;
 }
 
-/* TV static noise effect */
-.hero__image .glitch-layer::before {
+.glitch-wrapper::before,
+.glitch-wrapper::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
+  inset: 0;
+  background-image: var(--glitch-image);
+  background-size: cover;
+  background-position: center;
+  border-radius: inherit;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.glitch-wrapper::before {
+  opacity: 0;
+  z-index: 2;
+  animation: glitchSlice1 2.8s infinite linear;
+}
+
+.glitch-wrapper::after {
+  z-index: 3;
+  opacity: 0.12;
+  background-image:
+    var(--glitch-image),
     repeating-linear-gradient(
       0deg,
-      rgba(255, 0, 0, 0.15) 0px,
-      rgba(255, 0, 0, 0.15) 1px,
+      rgba(255, 255, 255, 0.08) 0px,
+      rgba(255, 255, 255, 0.08) 1px,
       transparent 1px,
-      transparent 2px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(0, 255, 255, 0.1) 0px,
-      rgba(0, 255, 255, 0.1) 1px,
-      transparent 1px,
-      transparent 2px
+      transparent 3px
     );
-  pointer-events: none;
-  z-index: 2;
-  animation: noise-shift 0.1s infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes tv-static-glitch {
-  0% { opacity: 0; }
-  40% { opacity: 0; }
-  42% { opacity: 1; }
-  44% { opacity: 0; }
-  46% { opacity: 1; }
-  48% { opacity: 0; }
-  50% { opacity: 1; }
-  52% { opacity: 0; }
-  54% { opacity: 0.9; }
-  56% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
-@keyframes noise-shift {
-  0% { transform: translate(0, 0); }
-  10% { transform: translate(-2px, 2px); }
-  20% { transform: translate(2px, -2px); }
-  30% { transform: translate(-1px, 1px); }
-  40% { transform: translate(1px, -1px); }
-  50% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  70% { transform: translate(-1px, -1px); }
-  80% { transform: translate(1px, 1px); }
-  90% { transform: translate(-2px, 1px); }
-  100% { transform: translate(0, 0); }
+  background-blend-mode: screen;
+  animation: glitchSlice2 3.4s infinite steps(1, end);
 }
 
 .hero__image::before {
@@ -391,12 +365,99 @@ a:focus-visible {
   border-radius: var(--radius-lg);
   opacity: 0.5;
   animation: pulse-border 3s ease-in-out infinite;
-  z-index: 1;
+  z-index: 4;
+  pointer-events: none;
 }
 
 @keyframes pulse-border {
   0%, 100% { opacity: 0.5; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    filter: brightness(1) contrast(1.05);
+    opacity: 1;
+  }
+  20%, 24% {
+    filter: brightness(1.15) contrast(1.25);
+    opacity: 0.96;
+  }
+  55% {
+    filter: brightness(0.85) contrast(1.4);
+    opacity: 0.92;
+  }
+}
+
+@keyframes glitchSlice1 {
+  0%, 100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  8% {
+    opacity: 0.4;
+    transform: translate3d(-4px, -3px, 0);
+    clip-path: inset(10% 0 55% 0);
+  }
+  10% {
+    opacity: 0.6;
+    transform: translate3d(4px, 1px, 0);
+    clip-path: inset(15% 0 40% 0);
+  }
+  12% {
+    opacity: 0.2;
+    transform: translate3d(-2px, 3px, 0);
+    clip-path: inset(5% 0 60% 0);
+  }
+  50% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  52% {
+    opacity: 0.5;
+    transform: translate3d(3px, -2px, 0);
+    clip-path: inset(45% 0 20% 0);
+  }
+  55% {
+    opacity: 0.35;
+    transform: translate3d(-5px, 2px, 0);
+    clip-path: inset(38% 0 35% 0);
+  }
+}
+
+@keyframes glitchSlice2 {
+  0%, 100% {
+    opacity: 0.12;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  6% {
+    opacity: 0.4;
+    transform: translate3d(6px, 2px, 0);
+    clip-path: inset(60% 0 5% 0);
+  }
+  8% {
+    opacity: 0.3;
+    transform: translate3d(-6px, -3px, 0);
+    clip-path: inset(65% 0 2% 0);
+  }
+  40% {
+    opacity: 0.18;
+    transform: translate3d(3px, -1px, 0);
+    clip-path: inset(25% 0 40% 0);
+  }
+  44% {
+    opacity: 0.45;
+    transform: translate3d(-4px, 2px, 0);
+    clip-path: inset(15% 0 55% 0);
+  }
+  70% {
+    opacity: 0.16;
+    transform: translate3d(2px, -2px, 0);
+    clip-path: inset(70% 0 8% 0);
+  }
 }
 
 .section {
@@ -725,7 +786,7 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .hero__image img {
+  .glitch-wrapper {
     max-width: 300px;
   }
 }
@@ -780,7 +841,7 @@ a:focus-visible {
     font-size: 0.95rem;
   }
 
-  .hero__image img {
+  .glitch-wrapper {
     max-width: 250px;
   }
 
@@ -803,6 +864,31 @@ a:focus-visible {
 
   .page-hero__cta {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-wrapper {
+    animation: none;
+    filter: none;
+  }
+
+  .glitch-img {
+    filter: none;
+  }
+
+  .glitch-wrapper::before {
+    animation: none;
+    opacity: 0;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .glitch-wrapper::after {
+    animation: none;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+    opacity: 0.12;
   }
 }
 
