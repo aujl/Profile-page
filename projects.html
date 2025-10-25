@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axel U. J. Lode | Projects & Deployments</title>
+  <meta name="description" content="Selected open-source contributions, analytics utilities, and oracle tooling maintained by Dr. Axel U. J. Lode." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="scripts.js" defer></script>
+</head>
+<body class="site site--projects">
+  <header class="site-header" id="top">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Axel U. J. Lode home">AUJL</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="nav__toggle-line"></span>
+        <span class="nav__toggle-line"></span>
+        <span class="nav__toggle-line"></span>
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+      <nav id="site-nav" class="nav__menu" aria-label="Primary">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#legacy">Academic legacy</a>
+        <a href="index.html#collaborations">Collaborations</a>
+        <a class="is-active" href="projects.html" aria-current="page">Projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero__layout">
+        <div>
+          <p class="page-hero__eyebrow">Projects & Deployments</p>
+          <h1>Analytics and oracle tooling in production</h1>
+          <p class="page-hero__lead">A curated feed of public repositories and collaboration-ready utilities spanning quantitative research and on-chain data delivery.</p>
+        </div>
+        <div class="page-hero__cta">
+          <a class="button" href="https://github.com/aujl?tab=repositories" target="_blank" rel="noreferrer">Full GitHub profile</a>
+          <a class="button button--ghost" href="mailto:axel@lode.cc">Partner on a build</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <header class="section__header">
+          <p class="section__eyebrow">Open source spotlight</p>
+          <h2>Recently updated repositories</h2>
+          <p class="section__lead">Live data via the GitHub API keeps this list current.</p>
+        </header>
+        <div class="repo-grid" data-github-grid data-source-user="aujl" aria-live="polite">
+          <p class="repo-grid__status">Loading repositories…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--accent">
+      <div class="container">
+        <header class="section__header">
+          <p class="section__eyebrow">Professional deliverables</p>
+          <h2>Cross-chain exporters for institutional desks</h2>
+          <p class="section__lead">Selected utilities maintained under the BSC-aujl engineering account.</p>
+        </header>
+        <div class="card-grid card-grid--dual">
+          <article class="card">
+            <div class="card__label">Solana</div>
+            <h3>Solana market data exporter</h3>
+            <p>High-throughput pipeline aligning Solana RPC snapshots with institutional risk systems via deterministic schemas.</p>
+            <a class="card__link" href="https://github.com/BSC-aujl/solana-exporter" target="_blank" rel="noreferrer">View repository</a>
+          </article>
+          <article class="card">
+            <div class="card__label">Supra</div>
+            <h3>Supra oracle exporter</h3>
+            <p>Normalizes Supra oracle feeds for treasury analytics, featuring configurable drift alarms and policy logging.</p>
+            <a class="card__link" href="https://github.com/BSC-aujl/supra-exporter" target="_blank" rel="noreferrer">View repository</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h3>Looking to stress test your oracle stack?</h3>
+            <p>Engage for architecture audits, bespoke exporters, or reporting pipelines tailored to treasury-grade governance.</p>
+          </div>
+          <a class="button" href="mailto:axel@lode.cc">Start a conversation</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__layout">
+      <div>
+        <h4>Axel U. J. Lode</h4>
+        <p>Bringing quantitative clarity to decentralized finance.</p>
+      </div>
+      <ul class="footer__links">
+        <li><a href="https://www.linkedin.com/in/dr-axel-u-j-lode-40a280209" target="_blank" rel="noreferrer">LinkedIn</a></li>
+        <li><a href="https://github.com/aujl" target="_blank" rel="noreferrer">GitHub</a></li>
+        <li><a href="index.html#legacy">Academic legacy</a></li>
+        <li><a href="#top">Back to top</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>
