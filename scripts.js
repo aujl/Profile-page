@@ -1,6 +1,77 @@
 (function () {
   const prefersReducedMotion = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
 
+  // Matrix particle effect
+  function initMatrixBackground() {
+    if (prefersReducedMotion) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.15;';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = Math.min(50, Math.floor(canvas.width / 20));
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.size = Math.random() * 2 + 0.5;
+        this.life = Math.random() * 100 + 50;
+        this.maxLife = this.life;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        const alpha = this.life / this.maxLife;
+        ctx.fillStyle = `rgba(0, 217, 255, ${alpha * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p, i) => {
+        p.update();
+        p.draw();
+
+        if (p.life <= 0) {
+          particles[i] = new Particle();
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  }
+
   function initNav() {
     const toggle = document.querySelector('[data-nav-toggle]');
     const menu = document.getElementById('site-nav');
@@ -83,7 +154,6 @@
       setTimeout(tick, delay);
     }
 
-    // kick off after slight delay for effect
     setTimeout(tick, 500);
   }
 
@@ -167,8 +237,10 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    initMatrixBackground();
     initNav();
     initTypedHeadline();
     populateRepositories();
   });
 })();
+
