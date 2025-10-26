@@ -1,0 +1,229 @@
+/* ===== Drop-in: Glitch Image + Responsive Cards =====
+   Author: ChatGPT for Axel (aujl)
+   Purpose: No-path, no-asset dependencies. Just include this CSS and the JS file.
+   Files: glitch-cards.css (this), glitchify.js
+   Notes: Uses inline data-URI noise; no external images required for effects.
+======================================================================= */
+
+/* ---------- CSS Variables (tweak if desired) ---------- */
+:root {
+  --gc-card-bg: rgba(8, 10, 14, 0.6);
+  --gc-card-text: #e7eefc;
+  --gc-link: #7cc0ff;
+  --gc-radius: 14px;
+  --gc-gap: 2rem;
+  --gc-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  --gc-border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ---------- Glitch base styles (JS will add structure) ---------- */
+.gc-glitch-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: min(90vw, 640px);
+  width: 100%;
+  height: 100%;
+  filter: contrast(1.12) saturate(1.08);
+  will-change: transform, filter, opacity;
+}
+.gc-glitch-canvas,
+.gc-glitch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gc-glitch-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Base layer (NFT) - No mirroring for NFT */
+.gc-glitch-wrap > .gc-glitch-img:not(.gc-layer-mirror),
+.gc-glitch-wrap .gc-glitch-layer:not(.gc-layer-mirror) {
+  transform: none !important;
+}
+
+/* Mirrored layer - Only for portrait */
+.gc-layer-mirror,
+.gc-portrait-effects .gc-glitch-layer {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(-1);
+  opacity: 1;  /* Make mirrored layers visible by default */
+  /* animation is controlled from JS to allow synced/random behaviour */
+  animation: none;
+  transition: opacity 140ms ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* When portrait is actively shown (overlay or replace) */
+.gc-layer-mirror.show {
+  opacity: 0.52;
+  transition: opacity 120ms linear;
+}
+
+/* Utility to fully hide the NFT layer when portrait replaces it */
+.gc-hidden {
+  opacity: 0 !important;
+  transition: opacity 120ms linear !important;
+}
+
+/* Intensified flicker for the short portrait events (faster, more visible) */
+.gc-flicker.gc-intense {
+  animation-duration: .36s !important;
+}
+
+/* Portrait-specific effect container (created by JS) */
+.gc-portrait-effects {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 1;
+  z-index: 7;
+  display: block;
+}
+
+/* portrait channels and slices should follow same rules as original layers */
+.gc-portrait-effects .gc-glitch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* small tweak so portrait effects look slightly stronger */
+.gc-portrait-effects .gc-layer-r,
+.gc-portrait-effects .gc-layer-g,
+.gc-portrait-effects .gc-layer-b { opacity: 0.75; }
+
+/* grain overlay (data-URI is injected by JS as background-image) */
+.gc-grain {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: overlay;
+  opacity: .08;
+  pointer-events: none;
+}
+
+/* scanline stripes */
+.gc-scanlines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.05) 0px,
+    rgba(255,255,255,0.05) 1px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0) 3px
+  );
+  opacity: .25;
+  pointer-events: none;
+}
+
+/* flicker animation */
+@keyframes gc-flicker {
+  0%, 100% { opacity: 1; filter: none; }
+  8%  { opacity: .85; filter: blur(.4px) brightness(1.05); }
+  12% { opacity: .7; filter: blur(1px) contrast(1.1); }
+  16% { opacity: .95; filter: none; }
+  22% { opacity: .6; filter: blur(1.6px) brightness(1.15); }
+  28% { opacity: .92; filter: none; }
+  35% { opacity: .75; filter: blur(.8px) contrast(1.05); }
+  45% { opacity: 1; filter: none; }
+  62% { opacity: .8; filter: blur(.6px) saturate(1.05); }
+  75% { opacity: .95; filter: none; }
+}
+.gc-flicker {
+  animation: gc-flicker .7s infinite steps(2, end);
+}
+
+/* RGB channel splits for glitch */
+.gc-layer-r, .gc-layer-g, .gc-layer-b {
+  mix-blend-mode: screen;
+  opacity: .6;
+}
+.gc-layer-r { filter: drop-shadow(1px 0 0 rgba(255,0,0,0.6)); }
+.gc-layer-g { filter: drop-shadow(-1px 0 0 rgba(0,255,0,0.6)); }
+.gc-layer-b { filter: drop-shadow(0 0 0 rgba(0,0,255,0.6)); }
+
+/* slice jitter (applied to each slice) */
+@keyframes gc-jitter-x {
+  0%   { transform: translateX(0); }
+  33%  { transform: translateX(-2px); }
+  66%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+@keyframes gc-jitter-y {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .gc-flicker { animation: none; }
+  .gc-layer-slice { animation: none !important; }
+}
+
+/* ---------- Responsive Cards (targets common section names) ---------- */
+.gc-cards, .cards, .projects, .services, .highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--gc-gap);
+  align-items: stretch;
+}
+.gc-card, .card, .project, .service, .highlight {
+  background: var(--gc-card-bg);
+  color: var(--gc-card-text);
+  border-radius: var(--gc-radius);
+  border: var(--gc-border);
+  padding: 1.25rem;
+  box-shadow: var(--gc-shadow);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  backdrop-filter: blur(6px);
+}
+.gc-card:hover, .card:hover, .project:hover, .service:hover, .highlight:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,.35);
+  border-color: rgba(255,255,255,0.16);
+}
+.gc-card h3, .card h3, .project h3, .service h3, .highlight h3 {
+  margin: 0 0 .6rem 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+}
+.gc-card p, .card p, .project p, .service p, .highlight p {
+  margin: 0 0 .75rem 0;
+  line-height: 1.45;
+  opacity: .92;
+  flex: 1 1 auto;
+}
+.gc-card a, .card a, .project a, .service a, .highlight a {
+  align-self: flex-start;
+  text-decoration: none;
+  color: var(--gc-link);
+  font-weight: 600;
+}
+
+/* images inside cards */
+.gc-card img, .card img, .project img, .service img, .highlight img {
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--gc-radius) - 4px);
+  margin-bottom: .8rem;
+  display: block;
+}
+
+/* small screens tweaks */
+@media (max-width: 480px) {
+  :root { --gc-gap: 1.25rem; }
+  .gc-card, .card, .project, .service, .highlight { padding: 1rem; }
+}

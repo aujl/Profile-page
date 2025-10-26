@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script src="scripts.js" defer></script>
+  <link rel="stylesheet" href="glitch-cards.css">
+  <script src="glitchify.js" defer></script>
 </head>
 <body class="site">
   <header class="site-header" id="top">
@@ -44,13 +46,9 @@
             <a class="button button--ghost" href="https://twitter.com/AxelLode" target="_blank" rel="noreferrer">Twitter</a>
           </div>
         </div>
-        <div class="hero__image">
-          <div class="glitch-wrapper glitch-wrapper--nft" style="--glitch-image: url('portrait-nft-v3.png');">
-            <img class="glitch-img" src="portrait-nft-v3.png" alt="Axel U. J. Lode – NFT portrait" />
-          </div>
-          <div class="glitch-wrapper glitch-wrapper--mirrored" style="--glitch-image: url('portrait-headshot-v3.png');">
-            <img class="glitch-img" src="portrait-headshot-v3.png" alt="Axel U. J. Lode – professional headshot" />
-          </div>
+        <div class="hero__image" style="position: relative; width: 100%; aspect-ratio: 1; max-width: 640px;">
+          <img src="nft.png" alt="Axel U. J. Lode – NFT portrait" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="portrait.png" alt="Axel U. J. Lode – Portrait" class="gc-layer-mirror" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);" />
         </div>
       </div>
     </section>

@@ -283,14 +283,18 @@ a:focus-visible {
 .hero__image {
   position: relative;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: clamp(1rem, 2.5vw, 1.5rem);
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
 }
 
 .glitch-wrapper {
-  position: relative;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   width: 100%;
   max-width: 400px;
   border-radius: var(--radius-lg);
@@ -310,6 +314,13 @@ a:focus-visible {
 
 .glitch-wrapper--mirrored {
   --glitch-orientation: scaleX(-1);
+  opacity: 0;
+  animation: intermittent-flash 2s infinite;
+}
+
+@keyframes intermittent-flash {
+  0%, 85%, 100% { opacity: 0; }
+  75%, 82% { opacity: 1; }
 }
 
 .glitch-img {
