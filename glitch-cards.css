@@ -14,6 +14,8 @@
   --gc-gap: 2rem;
   --gc-shadow: 0 10px 30px rgba(0,0,0,0.25);
   --gc-border: 1px solid rgba(255,255,255,0.08);
+  /* default portrait vertical alignment tweak (positive moves content down) */
+  --portrait-shift: -50px;
 }
 
 /* ---------- Glitch base styles (JS will add structure) ---------- */
@@ -85,9 +87,28 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 1;
+  opacity: 0;               /* hidden by default */
+  visibility: hidden;       /* hidden by default */
   z-index: 7;
   display: block;
+  transition: opacity 160ms ease, visibility 0s linear 160ms;
+  overflow: hidden;         /* crop bottom when shifting */
+}
+
+/* Shown intermittently when JS toggles the event */
+.gc-portrait-effects.active {
+  opacity: 0.65;         /* reduced opacity during display */
+  visibility: visible;
+  transition: opacity 140ms ease;
+}
+
+/* When replacing, hide all NFT layers (non-mirror) inside the wrap */
+.gc-glitch-wrap.gc-replacing > .gc-glitch-img,
+.gc-glitch-wrap.gc-replacing > .gc-grain,
+.gc-glitch-wrap.gc-replacing > .gc-scanlines,
+.gc-glitch-wrap.gc-replacing > .gc-glitch-layer:not(.gc-layer-mirror) {
+  opacity: 0 !important;
+  transition: opacity 120ms linear !important;
 }
 
 /* portrait channels and slices should follow same rules as original layers */
@@ -97,10 +118,14 @@
   pointer-events: none;
 }
 
-/* small tweak so portrait effects look slightly stronger */
-.gc-portrait-effects .gc-layer-r,
-.gc-portrait-effects .gc-layer-g,
-.gc-portrait-effects .gc-layer-b { opacity: 0.75; }
+/* Shift portrait content down slightly to align eyes; crop overflow at bottom */
+.gc-portrait-effects .gc-glitch-base,
+.gc-portrait-effects .gc-glitch-layer {
+  object-position: center calc(50% - var(--portrait-shift, 8px));
+}
+
+/* Ensure portrait channel opacities match base NFT channels */
+/* (Use the same .gc-layer-r/g/b rule below for both) */
 
 /* grain overlay (data-URI is injected by JS as background-image) */
 .gc-grain {
@@ -165,11 +190,27 @@
   100% { transform: translateY(0); }
 }
 
+/* Mirrored variants preserve scaleX(-1) during jitter animations */
+@keyframes gc-jitter-x-mirror {
+  0%   { transform: scaleX(-1) translateX(0); }
+  33%  { transform: scaleX(-1) translateX(-2px); }
+  66%  { transform: scaleX(-1) translateX(2px); }
+  100% { transform: scaleX(-1) translateX(0); }
+}
+@keyframes gc-jitter-y-mirror {
+  0%   { transform: scaleX(-1) translateY(0); }
+  50%  { transform: scaleX(-1) translateY(-1px); }
+  100% { transform: scaleX(-1) translateY(0); }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .gc-flicker { animation: none; }
   .gc-layer-slice { animation: none !important; }
 }
+
+/* Hide the original inline portrait image until JS builds mirrored layers */
+.hero__image > img.gc-layer-mirror { display: none !important; }
 
 /* ---------- Responsive Cards (targets common section names) ---------- */
 .gc-cards, .cards, .projects, .services, .highlights {
@@ -227,3 +268,12 @@
   :root { --gc-gap: 1.25rem; }
   .gc-card, .card, .project, .service, .highlight { padding: 1rem; }
 }
+
+/* ===== Overrides: ensure parity + interleaved flicker ===== */
+/* Interleave flicker phases between NFT (wrap) and portrait (effects) */
+.gc-glitch-wrap .gc-flicker { animation-delay: 0s; }
+.gc-portrait-effects .gc-flicker { animation-delay: .35s; }
+
+/* Keep grain and scanlines above slices/channels for both NFT and portrait */
+.gc-grain { z-index: 8; }
+.gc-scanlines { z-index: 11; }

@@ -60,12 +60,16 @@
       layer.classList.remove && layer.classList.remove('gc-glitch-img');
       layer.classList.add('gc-glitch-layer', `gc-layer-${c}`, 'gc-flicker');
       if (isPortrait) {
+        // If the source image is already a mirrored portrait, keep all derived layers mirrored too
         layer.classList.add('gc-layer-mirror');
       }
+      // Let CSS control opacity so NFT and portrait channels match
+      layer.style.removeProperty && layer.style.removeProperty('opacity');
       wrap.appendChild(layer);
     });
 
     // Create a few horizontal slices that jitter independently
+    // Keep slice counts consistent so NFT and portrait exhibit the same density
     const sliceCount = 9;
     const wrapRect = wrap.getBoundingClientRect();
     const h = wrapRect.height || img.naturalHeight || 320;
@@ -81,6 +85,7 @@
       const height = Math.floor(h / sliceCount + (Math.random()*4 - 2));
       slice.style.clipPath = `inset(${top}px 0 ${Math.max(h - (top+height),0)}px 0)`;
       slice.style.animation = `${i%2===0 ? 'gc-jitter-x' : 'gc-jitter-y'} ${0.6 + Math.random()*0.9}s infinite steps(2,end)`;
+      // Let CSS drive the overall look; keep a consistent opacity range
       slice.style.opacity = String(0.3 + Math.random()*0.4);
       wrap.appendChild(slice);
     }
@@ -129,19 +134,20 @@
         pScan.className = 'gc-scanlines';
         pe.appendChild(pScan);
 
-        // RGB channels for portrait
+        // RGB channels for portrait — match NFT channel behavior
         const channels = ['r','g','b'];
         channels.forEach((c) => {
           const layer = portrait.cloneNode(true);
           layer.removeAttribute('srcset');
           layer.classList.remove && layer.classList.remove('gc-glitch-img');
           layer.classList.add('gc-glitch-layer', 'gc-layer-mirror', `gc-layer-${c}`, 'gc-flicker');
-          layer.style.opacity = '0.5';  // Set a suitable opacity for the effect layers
+          // Use CSS-defined opacity for parity with NFT
+          layer.style.removeProperty && layer.style.removeProperty('opacity');
           pe.appendChild(layer);
         });
 
         // Portrait slices (fewer than main to reduce cost)
-        const sliceCountP = 6;
+        const sliceCountP = sliceCount; // keep portrait slice count equal to NFT
         const wrapRectP = wrap.getBoundingClientRect();
         const hP = wrapRectP.height || portrait.naturalHeight || img.naturalHeight || 320;
         for (let i=0; i<sliceCountP; i++) {
@@ -152,8 +158,10 @@
           const top = Math.floor((hP / sliceCountP) * i + (i ? Math.random()*3 : 0));
           const height = Math.floor(hP / sliceCountP + (Math.random()*4 - 2));
           slice.style.clipPath = `inset(${top}px 0 ${Math.max(hP - (top+height),0)}px 0)`;
-          slice.style.animation = `${i%2===0 ? 'gc-jitter-x' : 'gc-jitter-y'} ${0.5 + Math.random()*0.9}s infinite steps(2,end)`;
-          slice.style.opacity = String(0.2 + Math.random()*0.3);  // Slightly reduced opacity for slices
+          // Use mirrored jitter animations so the transform keeps scaleX(-1)
+          const jitter = i%2===0 ? 'gc-jitter-x-mirror' : 'gc-jitter-y-mirror';
+          slice.style.animation = `${jitter} ${0.6 + Math.random()*0.9}s infinite steps(2,end)`;
+          slice.style.opacity = String(0.3 + Math.random()*0.4);  // Match NFT slices opacity range
           pe.appendChild(slice);
         }
 
@@ -165,21 +173,24 @@
 
       // Helper to toggle classes on portrait-related flicker layers
       function addIntense() {
+        // Interleave flicker intensity: portrait gets intense while NFT remains normal
+        wrap.querySelectorAll('.gc-flicker').forEach(el => el.classList.remove('gc-intense'));
         pe.querySelectorAll('.gc-flicker').forEach(el => el.classList.add('gc-intense'));
-        img.classList.add('gc-intense');
       }
       function removeIntense() {
+        // Reset to default flicker
+        wrap.querySelectorAll('.gc-flicker').forEach(el => el.classList.remove('gc-intense'));
         pe.querySelectorAll('.gc-flicker').forEach(el => el.classList.remove('gc-intense'));
-        img.classList.remove('gc-intense');
       }
 
       // Schedule intermittent portrait events (slower and longer by request)
       (function schedulePortraitEvent() {
-        // Random delay until next event (4s - 12s)
-        const nextDelay = 4000 + Math.random() * 8000;
+        // Random delay until next event (2s - 6s) → more frequent
+        const nextDelay = 2000 + Math.random() * 4000;
         setTimeout(() => {
-          const mode = Math.random() < 0.5 ? 'overlay' : 'replace';
-          // Show duration longer now (900ms - 2500ms)
+          // Always replace NFT with portrait during the event
+          const mode = 'replace';
+          // Show duration (900ms - 2500ms)
           const showDuration = 900 + Math.random() * 1600; // ms
 
           // Sync flicker: briefly intensify flicker on both elements and restart animation
@@ -191,18 +202,39 @@
           // Show portrait effects (we render portrait via the pe base clone)
           pe.classList.add('active');
 
-          if (mode === 'replace') {
-            // Hide the NFT entirely while portrait replaces it
-            img.classList.add('gc-hidden');
-          } else {
-            // Overlay: keep NFT visible under portrait
-            img.classList.remove('gc-hidden');
-          }
+          // Default to replacing NFT while portrait is active,
+          // but allow brief overlay "peeks" during flicker (about 40% of ticks).
+          wrap.classList.add('gc-replacing');
+
+          // Intermittent peek logic: toggle replacing off briefly at random intervals
+          const peekIntervalMs = 120; // roughly in sync with flicker steps
+          const peekChance = 0.4;     // ~40% of ticks will show NFT under portrait
+          let peekTimer = setInterval(() => {
+            if (!pe.classList.contains('active')) return; // stopped elsewhere
+            if (Math.random() < peekChance) {
+              // Allow NFT to show through briefly
+              wrap.classList.remove('gc-replacing');
+              setTimeout(() => {
+                // Reinstate replacing after a short peek
+                if (pe.classList.contains('active')) {
+                  wrap.classList.add('gc-replacing');
+                }
+              }, 80 + Math.floor(Math.random()*60));
+            } else {
+              // Keep replacing on non-peek ticks
+              if (!wrap.classList.contains('gc-replacing')) {
+                wrap.classList.add('gc-replacing');
+              }
+            }
+          }, peekIntervalMs);
 
           // End the event after showDuration
           setTimeout(() => {
             pe.classList.remove('active');
             removeIntense();
+            // End any peeks and clean up
+            try { clearInterval(peekTimer); } catch(e) {}
+            wrap.classList.remove('gc-replacing');
             img.classList.remove('gc-hidden');
           }, showDuration);
 
