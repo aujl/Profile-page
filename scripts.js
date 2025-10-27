@@ -11,7 +11,7 @@
 
     // Tunable constants (single allocation for efficiency)
     const MIN_DISTANCE = 60;           // soften gravity near the cursor
-    const MAX_SPEED = 2.0;             // hard speed cap
+    const MAX_SPEED = 1.5;             // hard speed cap
     const DAMPING = 0.9925;              // velocity damping per update tick
     const GRAVITY_STRENGTH = -0.005;    // negative mass: push away from mouse
     const BOOST_FACTOR = 2.5;          // wrap boost multiplier
