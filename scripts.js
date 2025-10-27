@@ -12,9 +12,9 @@
     // Tunable constants (single allocation for efficiency)
     const MIN_DISTANCE = 60;           // soften gravity near the cursor
     const MAX_SPEED = 2.0;             // hard speed cap
-    const DAMPING = 0.98;              // velocity damping per update tick
-    const GRAVITY_STRENGTH = -0.01;    // negative mass: push away from mouse
-    const BOOST_FACTOR = 1.5;          // wrap boost multiplier
+    const DAMPING = 0.9925;              // velocity damping per update tick
+    const GRAVITY_STRENGTH = -0.005;    // negative mass: push away from mouse
+    const BOOST_FACTOR = 2.5;          // wrap boost multiplier
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -30,7 +30,7 @@
         this.y = Math.random() * canvas.height;
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = Math.random() * 2 + 1.2;
+        this.size = Math.random() * 5.0 + 1;
         this.color = `hsl(${270 + Math.random() * 30}, 100%, 50%)`; // Purple range
       }
 
