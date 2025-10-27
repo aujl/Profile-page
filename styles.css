@@ -43,6 +43,9 @@ body.site {
   line-height: 1.6;
   position: relative;
   overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Particle background canvas */
@@ -64,6 +67,16 @@ svg {
 
 /* Layout guards */
 main, .container { width: min(100%, var(--maxw)); margin-inline:auto; }
+main { flex: 1 0 auto; }
+
+/* Footer base */
+.footer {
+  flex-shrink: 0;
+  background: transparent;
+  backdrop-filter: none;
+  border-top: 0;
+  width: 100%;
+}
 
 /* Accessible motion preferences */
 @media (prefers-reduced-motion: reduce){
@@ -187,11 +200,22 @@ a:focus-visible {
 /* New Hero: NFT + mirrored portrait composite */
 .hero{
   position:relative; isolation:isolate;
-  display:grid; gap:clamp(14px, 3vw, 28px);
-  align-items:center;
+  display:grid;
+  row-gap: clamp(14px, 3vw, 28px);
+  column-gap: clamp(64px, 12vw, 160px);
+  align-items:start;
   min-height: clamp(320px, 50vw, 560px);
   padding-block: clamp(24px, 6vw, 64px);
 }
+
+.hero__greeting{
+  text-align: center;
+  margin-bottom: .5rem;
+}
+
+.hero__col{ display:flex; flex-direction:column; align-items:center; }
+.hero__col--left{ grid-column: 1; }
+.hero__col--right{ grid-column: 2; text-align: center; }
 
 .hero__background {
   position: absolute;
@@ -268,7 +292,8 @@ a:focus-visible {
 }
 
 /* Ensure hero flip card computes height via aspect-ratio */
-.hero-card .card__inner{ aspect-ratio: 1/1; width:min(100%, 520px); height:auto; margin-inline:auto; }
+.hero-card{ width: 100%; }
+.hero-card .card__inner{ aspect-ratio: 1/1; width:min(100%, 58ch); height:auto; margin-inline:auto; }
 .hero-card .card__face{ padding:0; }
 .hero-card .hero__media{ position:absolute; inset:0; width:100%; height:100%; margin:0; }
 
@@ -307,10 +332,21 @@ a:focus-visible {
 }
 .hero__text p{ margin:0; opacity:.85; font-size: clamp(1rem, 2.4vw, 1.25rem); }
 
+/* Gradient subtitle to mirror the main hero title */
+.hero__headline{
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  background: linear-gradient(315deg, var(--primary), var(--highlight));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 @media (min-width: 900px){
-  .hero{ grid-template-columns: 1.2fr .8fr; align-items:center; }
-  .hero__media{ order:1 }
-  .hero__text{ order:2; text-align:left }
+  .hero{ grid-template-columns: 1.2fr .8fr; align-items:start; }
+  .hero__text{ text-align:center; order: initial; }
+  .hero__col--right{ margin-top: clamp(4px, 1vw, 18px); }
 }
 
 .hero__copy {
@@ -392,6 +428,12 @@ a:focus-visible {
   box-shadow: 0 0 25px rgba(0, 217, 255, 0.4);
 }
 
+/* Smaller button variant */
+.button.button--sm {
+  padding: 0.55rem 1rem;
+  font-size: 0.88rem;
+}
+
 
 
 
@@ -406,6 +448,40 @@ a:focus-visible {
   border-top: 1px solid rgba(0, 217, 255, 0.1);
   border-bottom: 1px solid rgba(0, 217, 255, 0.1);
 }
+
+/* Compact footer: enforce two visual lines */
+.footer--compact .footer__wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer--compact .footer__tagline {
+  margin: 0;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.footer--compact .footer__label { opacity: 0.8; font-weight: 600; }
+
+/* Keep second line as a single visual row using column-flow grid */
+.footer--compact .collab-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(0.5rem, 2vw, 1rem);
+  width: 100%;
+}
+
+.footer--compact .collab-card {
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.6rem;
+}
+
+.footer--compact .collab-card p { margin: 0; color: var(--ink); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.footer--compact .collab-card a { color: var(--ink); text-decoration: none; }
+.footer--compact .collab-card a:hover { color: var(--primary); text-decoration: underline; }
 
 .section__header {
   margin-bottom: clamp(2rem, 4vw, 2.75rem);
@@ -552,10 +628,10 @@ a:focus-visible {
 }
 
 .footer {
-  background: linear-gradient(180deg, rgba(10, 10, 10, 0.95), rgba(10, 10, 10, 1));
+  background: transparent;
   color: var(--ink-muted);
   padding-block: 2.5rem;
-  border-top: 1px solid rgba(0, 217, 255, 0.1);
+  border-top: 0;
   position: relative;
   z-index: 1;
 }
