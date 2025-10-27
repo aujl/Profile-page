@@ -33,13 +33,11 @@
         this.x += this.vx;
         this.y += this.vy;
 
-        // Bounce off edges
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
-        // Keep in bounds
-        this.x = Math.max(0, Math.min(canvas.width, this.x));
-        this.y = Math.max(0, Math.min(canvas.height, this.y));
+        // Toroidal wrap: when exiting one side, enter from the opposite with same velocity
+        const w = canvas.width;
+        const h = canvas.height;
+        if (this.x < 0) this.x += w; else if (this.x > w) this.x -= w;
+        if (this.y < 0) this.y += h; else if (this.y > h) this.y -= h;
       }
 
       updateVelocityTowardsMouse() {
@@ -47,7 +45,7 @@
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.max(Math.hypot(dx, dy), minDistance);
-        const strength = -0.02 * this.size; // negative mass: push away from mouse
+        const strength = -0.001 * this.size; // negative mass: push away from mouse
         this.vx += (dx / dist) * strength;
         this.vy += (dy / dist) * strength;
 
