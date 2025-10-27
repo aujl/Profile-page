@@ -9,7 +9,12 @@
     canvas.id = 'particle-bg';
     document.body.insertBefore(canvas, document.body.firstChild);
 
-    const minDistance = 60; // soften gravity near the cursor
+    // Tunable constants (single allocation for efficiency)
+    const MIN_DISTANCE = 60;           // soften gravity near the cursor
+    const MAX_SPEED = 2.0;             // hard speed cap
+    const DAMPING = 0.98;              // velocity damping per update tick
+    const GRAVITY_STRENGTH = -0.01;    // negative mass: push away from mouse
+    const BOOST_FACTOR = 1.5;          // wrap boost multiplier
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -36,22 +41,40 @@
         // Toroidal wrap: re-enter on the opposite side and KEEP velocity direction
         const w = canvas.width;
         const h = canvas.height;
-        if (this.x < 0) this.x += w; else if (this.x >= w) this.x -= w;
-        if (this.y < 0) this.y += h; else if (this.y >= h) this.y -= h;
+
+        // Flip and boost
+        if (this.x < 0) { this.x += w; this.vx *= BOOST_FACTOR; }
+        else if (this.x >= w) { this.x -= w; this.vx *= BOOST_FACTOR; }
+        if (this.y < 0) { this.y += h; this.vy *= BOOST_FACTOR; }
+        else if (this.y >= h) { this.y -= h; this.vy *= BOOST_FACTOR; }
+
+        // Enforce global max speed after any wrap/boost
+        const s = Math.hypot(this.vx, this.vy);
+        if (s > MAX_SPEED) {
+          const k = MAX_SPEED / s;
+          this.vx *= k; this.vy *= k;
+        }
       }
 
       updateVelocityTowardsMouse() {
         // Repel particles from the mouse (negative mass effect) with damping and speed cap
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
-        const dist = Math.max(Math.hypot(dx, dy), minDistance);
-        const strength = -0.005 * this.size; // negative mass: push away from mouse
+        const dist = Math.max(Math.hypot(dx, dy), MIN_DISTANCE);
+        const strength = GRAVITY_STRENGTH * this.size; // negative mass: push away from mouse
         this.vx += (dx / dist) * strength;
         this.vy += (dy / dist) * strength;
 
-        // Apply light damping
-        this.vx *= 0.99;
-        this.vy *= 0.99;
+        // Apply damping
+        this.vx *= DAMPING;
+        this.vy *= DAMPING;
+
+        // Enforce max speed cap
+        const s = Math.hypot(this.vx, this.vy);
+        if (s > MAX_SPEED) {
+          const k = MAX_SPEED / s;
+          this.vx *= k; this.vy *= k;
+        }
       }
 
       draw() {
