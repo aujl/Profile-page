@@ -33,28 +33,11 @@
         this.x += this.vx;
         this.y += this.vy;
 
-        // Toroidal wrap: when exiting one side, enter from the opposite with same velocity
+        // Toroidal wrap: re-enter on the opposite side and KEEP velocity direction
         const w = canvas.width;
         const h = canvas.height;
-        let wrapped = false;
-        if (this.x < 0) { this.x += w; wrapped = true; }
-        else if (this.x > w) { this.x -= w; wrapped = true; }
-        if (this.y < 0) { this.y += h; wrapped = true; }
-        else if (this.y > h) { this.y -= h; wrapped = true; }
-
-        // Give a tiny boost when crossing walls to keep motion lively
-        if (wrapped) {
-          const boost = 1.05; // 5% boost
-          this.vx *= boost;
-          this.vy *= boost;
-          // respect max speed
-          const speed = Math.hypot(this.vx, this.vy);
-          const maxSpeed = 2.0;
-          if (speed > maxSpeed) {
-            const s = maxSpeed / speed;
-            this.vx *= s; this.vy *= s;
-          }
-        }
+        if (this.x < 0) this.x += w; else if (this.x >= w) this.x -= w;
+        if (this.y < 0) this.y += h; else if (this.y >= h) this.y -= h;
       }
 
       updateVelocityTowardsMouse() {
@@ -62,22 +45,13 @@
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.max(Math.hypot(dx, dy), minDistance);
-        const strength = -0.01 * this.size; // negative mass: push away from mouse
+        const strength = -0.005 * this.size; // negative mass: push away from mouse
         this.vx += (dx / dist) * strength;
         this.vy += (dy / dist) * strength;
 
         // Apply light damping
-        this.vx *= 0.95;
-        this.vy *= 0.95;
-
-        // Cap velocity to avoid runaway speeds
-        const speed = Math.hypot(this.vx, this.vy);
-        const maxSpeed = 1.3;
-        if (speed > maxSpeed) {
-          const s = maxSpeed / speed;
-          this.vx *= s;
-          this.vy *= s;
-        }
+        this.vx *= 0.99;
+        this.vy *= 0.99;
       }
 
       draw() {
