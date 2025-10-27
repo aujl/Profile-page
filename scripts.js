@@ -9,9 +9,11 @@
     canvas.id = 'particle-bg';
     document.body.insertBefore(canvas, document.body.firstChild);
 
+    const minDistance = 60; // soften gravity near the cursor
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
 
     const particles = [];
     const particleCount = Math.min(80, Math.floor(canvas.width / 15));
@@ -23,7 +25,7 @@
         this.y = Math.random() * canvas.height;
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = Math.random() * 2 + 1;
+        this.size = Math.random() * 2 + 1.2;
         this.color = `hsl(${270 + Math.random() * 30}, 100%, 50%)`; // Purple range
       }
 
@@ -40,6 +42,29 @@
         this.y = Math.max(0, Math.min(canvas.height, this.y));
       }
 
+      updateVelocityTowardsMouse() {
+        // Gently attract particles toward the mouse with damping and speed cap
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.max(Math.hypot(dx, dy), minDistance);
+        const strength = 0.015 * this.size; // attraction factor
+        this.vx += (dx / dist) * strength;
+        this.vy += (dy / dist) * strength;
+
+        // Apply light damping
+        this.vx *= 0.996;
+        this.vy *= 0.996;
+
+        // Cap velocity to avoid runaway speeds
+        const speed = Math.hypot(this.vx, this.vy);
+        const maxSpeed = 1.3;
+        if (speed > maxSpeed) {
+          const s = maxSpeed / speed;
+          this.vx *= s;
+          this.vy *= s;
+        }
+      }
+
       draw() {
         ctx.fillStyle = this.color;
         ctx.beginPath();
@@ -48,7 +73,7 @@
         
         // Glow effect
         ctx.strokeStyle = `rgba(181, 55, 242, 0.3)`;
-        ctx.lineWidth = 0.5;
+        ctx.lineWidth = 0.8;
         ctx.stroke();
       }
     }
@@ -58,6 +83,7 @@
       particles.push(new Particle());
     }
 
+
     function drawConnections() {
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -66,9 +92,9 @@
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < connectionDistance) {
-            const opacity = (1 - distance / connectionDistance) * 0.4;
+            const opacity = (1 - distance / connectionDistance) * 0.8;
             ctx.strokeStyle = `rgba(181, 55, 242, ${opacity})`;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = Math.random() * (particles[i].size + particles[j].size) / 2;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -80,11 +106,12 @@
 
     function animate() {
       // Dark background
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw particles
       particles.forEach((p) => {
+        p.updateVelocityTowardsMouse();
         p.update();
         p.draw();
       });
@@ -101,7 +128,17 @@
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      // Re-center mouse on resize to keep motion stable
+      mouse.x = canvas.width / 2;
+      mouse.y = canvas.height / 2;
     });
+
+    // Track mouse position for gravity
+    window.addEventListener('mousemove', (e) => {
+      // canvas is fixed at top-left, so client coords map directly
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    }, { passive: true });
   }
 
   function initNav() {
