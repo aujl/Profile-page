@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="styles.css" />
   <script src="scripts.js" defer></script>
   <link rel="stylesheet" href="glitch-cards.css">
-  <script src="glitchify.js" defer></script>
 </head>
 <body class="site">
   <header class="site-header" id="top">
@@ -32,26 +31,33 @@
   </header>
 
   <main>
-    <section class="hero" id="home">
-      <div class="container hero__layout">
-        <div class="hero__copy">
-          <p class="hero__eyebrow">Quantum physicist & blockchain engineer</p>
-          <h1>Axel U. J. Lode</h1>
-          <p class="hero__lead">
-            Two decades of quantum physics research applied to blockchain infrastructure, oracle design, and quantitative market analysis.
-          </p>
-          <div class="hero__actions">
-            <a class="button" href="https://axel.lode.cc/cv/Axel_Lode_CV.pdf" target="_blank" rel="noreferrer">Download CV</a>
-            <a class="button button--ghost" href="https://www.linkedin.com/in/dr-axel-u-j-lode-40a280209" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a class="button button--ghost" href="https://twitter.com/AxelLode" target="_blank" rel="noreferrer">Twitter</a>
+    <header class="hero" id="home">
+      <article class="card flip hero-card" style="background: transparent; border: none; box-shadow: none;">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <div class="hero__media hero__media--flicker">
+              <img class="hero__nft" src="nft.png" alt="NFT artwork">
+            </div>
+          </div>
+          <div class="card__face card__face--back">
+            <div class="hero__media hero__media--flicker">
+              <div class="hero__portrait-wrap">
+                <img class="hero__portrait" src="portrait.png" alt="Portrait">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="hero__image" style="position: relative; width: 100%; aspect-ratio: 1; max-width: 640px;">
-          <img src="nft.png" alt="Axel U. J. Lode – NFT portrait" style="width: 100%; height: 100%; object-fit: cover;" />
-          <img src="portrait.png" alt="Axel U. J. Lode – Portrait" class="gc-layer-mirror" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);" />
+      </article>
+      <div class="hero__text">
+        <h1>Axel U. J. Lode</h1>
+        <p>DeFi &amp; Data • Quantum Many-Body • Oracles • AI</p>
+        <div class="hero__actions" style="margin-top: 1rem;">
+          <a class="button" href="cv/Axel_U_J_Lode_CV.pdf" target="_blank" rel="noreferrer">Download CV</a>
+          <a class="button button--ghost" href="https://www.linkedin.com/in/dr-axel-u-j-lode-40a280209" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a class="button button--ghost" href="https://twitter.com/AxelLode" target="_blank" rel="noreferrer">Twitter</a>
         </div>
       </div>
-    </section>
+    </header>
   </main>
 
   <footer class="footer">
@@ -68,6 +74,20 @@
       </ul>
     </div>
   </footer>
+  <script>
+  (function(){
+    const media = document.querySelector('.hero__media');
+    if(!media) return;
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+    media.addEventListener('mousemove', (e)=>{
+      const r = media.getBoundingClientRect();
+      const x = (e.clientX - r.left)/r.width - .5;
+      const y = (e.clientY - r.top)/r.height - .5;
+      media.style.transform = `translateY(${(-y*2)}px) translateX(${(x*2)}px)`;
+    });
+    media.addEventListener('mouseleave', ()=> media.style.transform = '');
+  })();
+  </script>
 </body>
 </html>
-

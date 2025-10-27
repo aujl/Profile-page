@@ -215,11 +215,11 @@
 /* ---------- Responsive Cards (targets common section names) ---------- */
 .gc-cards, .cards, .projects, .services, .highlights {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--gc-gap);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--r, var(--gc-gap));
   align-items: stretch;
 }
-.gc-card, .card, .project, .service, .highlight {
+.gc-card, .card:not(.flip), .project, .service, .highlight {
   background: var(--gc-card-bg);
   color: var(--gc-card-text);
   border-radius: var(--gc-radius);
@@ -232,22 +232,22 @@
   min-height: 0;
   backdrop-filter: blur(6px);
 }
-.gc-card:hover, .card:hover, .project:hover, .service:hover, .highlight:hover {
+.gc-card:hover, .card:not(.flip):hover, .project:hover, .service:hover, .highlight:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 40px rgba(0,0,0,.35);
   border-color: rgba(255,255,255,0.16);
 }
-.gc-card h3, .card h3, .project h3, .service h3, .highlight h3 {
+.gc-card h3, .card:not(.flip) h3, .project h3, .service h3, .highlight h3 {
   margin: 0 0 .6rem 0;
   font-size: clamp(1.05rem, 1.6vw, 1.3rem);
 }
-.gc-card p, .card p, .project p, .service p, .highlight p {
+.gc-card p, .card:not(.flip) p, .project p, .service p, .highlight p {
   margin: 0 0 .75rem 0;
   line-height: 1.45;
   opacity: .92;
   flex: 1 1 auto;
 }
-.gc-card a, .card a, .project a, .service a, .highlight a {
+.gc-card a, .card:not(.flip) a, .project a, .service a, .highlight a {
   align-self: flex-start;
   text-decoration: none;
   color: var(--gc-link);
@@ -255,7 +255,7 @@
 }
 
 /* images inside cards */
-.gc-card img, .card img, .project img, .service img, .highlight img {
+.gc-card img, .card:not(.flip) img, .project img, .service img, .highlight img {
   width: 100%;
   height: auto;
   border-radius: calc(var(--gc-radius) - 4px);
@@ -266,7 +266,7 @@
 /* small screens tweaks */
 @media (max-width: 480px) {
   :root { --gc-gap: 1.25rem; }
-  .gc-card, .card, .project, .service, .highlight { padding: 1rem; }
+  .gc-card, .card:not(.flip), .project, .service, .highlight { padding: 1rem; }
 }
 
 /* ===== Overrides: ensure parity + interleaved flicker ===== */
@@ -277,3 +277,84 @@
 /* Keep grain and scanlines above slices/channels for both NFT and portrait */
 .gc-grain { z-index: 8; }
 .gc-scanlines { z-index: 11; }
+
+/* ---------- 3D Flip + Pixel Reveal Cards (opt-in) ---------- */
+/* Usage: <article class="card flip"> ... structure ... */
+.card.flip{ perspective: 1200px; -webkit-perspective: 1200px; position: relative; }
+.card.flip{ padding:0 !important; background: transparent !important; border:none !important; box-shadow:none !important; display:block !important; }
+.card.flip{ backdrop-filter: none !important; }
+.card.flip:hover{ transform:none !important; box-shadow:none !important; }
+.card.flip .card__inner{
+  position:relative; height:100%; transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  transition: transform .6s cubic-bezier(.2,.7,.2,1);
+  transition-delay: 0s;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  box-shadow: var(--shadow, 0 6px 24px rgba(0,0,0,.18));
+  overflow:hidden;
+  min-height: 240px;
+  will-change: transform;
+}
+/* Face-only rotation (no parent rotate) */
+.card.flip .card__inner{ transition: transform .6s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+.card.flip:hover .card__inner,
+.card.flip.is-flipped .card__inner{ transform: none; }
+.card.flip .card__face{
+  position:absolute; inset:0; padding:1.2rem;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  display:flex; flex-direction:column; gap:.7rem; justify-content:space-between;
+  width:100%; height:100%;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  color: var(--gc-card-text, #e7eefc);
+  -webkit-text-fill-color: currentColor;
+  z-index: 2;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+}
+.card.flip .card__face--front{
+  /* match back gradient to avoid visual flush on return */
+  background:
+    radial-gradient(120% 80% at 80% 100%, rgba(255,0,120,.14), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+}
+.card.flip .card__face--back{
+  /* magenta-ish glow like test2 */
+  background:
+    radial-gradient(120% 80% at 80% 100%, rgba(255,0,120,.14), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+}
+.card.flip .card__face *{ color: inherit; -webkit-text-fill-color: currentColor; }
+.card.flip .card__face--front{ transform: rotateY(0deg) translateZ(1px); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.card.flip .card__face--back{ transform: rotateY(180deg) translateZ(1px); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.card.flip:hover .card__face--front,
+.card.flip.is-flipped .card__face--front{ transform: rotateY(180deg) translateZ(1px); }
+.card.flip:hover .card__face--back,
+.card.flip.is-flipped .card__face--back{ transform: rotateY(0deg) translateZ(1px); }
+
+/* Ensure readable back content regardless of inherited styles */
+.card.flip .card__face h3 { color: #e7eefc; margin: 0 0 .4rem 0; }
+.card.flip .card__face p { color: rgba(231,238,252,.85); margin: 0 0 .6rem 0; }
+.card.flip .card__face a { color: #7cc0ff; font-weight: 600; }
+
+/* Front face presentation for symbol + label */
+.card.flip .card__face--front{ align-items:center; justify-content:center; text-align:center; gap:.8rem; }
+.card.flip .card__symbol{ line-height:1; display:grid; place-items:center; color:#a8c8ff; }
+.card.flip .card__symbol svg{ width: clamp(36px, 6vw, 64px); height: clamp(36px, 6vw, 64px); fill: currentColor; }
+.card.flip .card__label{ opacity:.9; letter-spacing:.02em; align-self: center; }
+
+/* Pixel reveal (progressive enhancement) */
+.card.pixel .card__inner::after{
+  content:""; position:absolute; inset:0;
+  background:
+    linear-gradient(transparent 0 49%, rgba(255,255,255,.05) 50% 51%, transparent 52% 100%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 4px);
+  mix-blend-mode: overlay; opacity:0; transition: opacity .4s ease; z-index: 1; pointer-events:none;
+}
+.card.pixel:hover .card__inner::after{ opacity:1 }
+.card.flip:hover .card__inner::after,
+.card.flip.is-flipped .card__inner::after{ opacity:0; }
+
+.card.pixel .card__face--front{ clip-path: inset(0); transition: clip-path .5s steps(6, end); }
+.card.pixel:hover .card__face--front{ clip-path: inset(44% 0 0 0); }

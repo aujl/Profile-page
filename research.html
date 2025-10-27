@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="glitch-cards.css" />
   <script src="scripts.js" defer></script>
 </head>
 <body class="site site--projects">
@@ -39,7 +40,7 @@
         </div>
         <div class="page-hero__cta">
           <a class="button" href="https://orcid.org/0000-0002-8859-1655" target="_blank" rel="noreferrer">ORCID Profile</a>
-          <a class="button button--ghost" href="https://axel.lode.cc/cv/Axel_Lode_CV.pdf" target="_blank" rel="noreferrer">Full CV</a>
+          <a class="button button--ghost" href="cv/Axel_U_J_Lode_CV.pdf" target="_blank" rel="noreferrer">Full CV</a>
         </div>
       </div>
     </section>
@@ -52,17 +53,41 @@
           <p class="section__lead">Curated research spanning quantum dynamics, many-body theory, computational physics, and open-source simulation frameworks.</p>
         </header>
         <div class="card-grid card-grid--dual">
-          <article class="card">
-            <div class="card__label">ORCID</div>
-            <h3>Research identity: 0000-0002-8859-1655</h3>
-            <p>Comprehensive publication record with 98+ indexed outputs across peer-reviewed journals, conference proceedings, and collaborative research.</p>
-            <a class="card__link" href="https://orcid.org/0000-0002-8859-1655" target="_blank" rel="noreferrer">View ORCID profile</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">ORCID</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Research identity: 0000-0002-8859-1655</h3>
+                <p>Publication record with 98+ indexed outputs across journals and conferences.</p>
+                <a class="card__link" href="https://orcid.org/0000-0002-8859-1655" target="_blank" rel="noreferrer">View ORCID profile</a>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">Review of Modern Physics</div>
-            <h3>Colloquium: Multiconfigurational time-dependent Hartree approaches</h3>
-            <p>Comprehensive survey of state-of-the-art methods for indistinguishable particles and many-body systems, highlighting simulation fidelity and numerical precision.</p>
-            <a class="card__link" href="https://doi.org/10.1103/RevModPhys.92.011001" target="_blank" rel="noreferrer">Read article</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <rect x="4" y="3" width="14" height="18" rx="2"/>
+                    <path d="M8 7h6M8 11h6M8 15h4" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Review of Modern Physics</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Colloquium: MCTDH approaches</h3>
+                <p>Survey of methods for indistinguishable particles and many‑body systems.</p>
+                <a class="card__link" href="https://doi.org/10.1103/RevModPhys.92.011001" target="_blank" rel="noreferrer">Read article</a>
+              </div>
+            </div>
           </article>
         </div>
       </div>
@@ -76,29 +101,79 @@
           <p class="section__lead">Foundational work in quantum simulation methods, open-source infrastructure, and international research collaborations.</p>
         </header>
         <div class="card-grid">
-          <article class="card">
-            <div class="card__label">Thesis monograph</div>
-            <h3>Numerically exact quantum dynamics of bosons</h3>
-            <p>Developed precision solvers for driven many-body systems and strongly correlated bosons. Published by Springer as part of the Springer Theses series.</p>
-            <a class="card__link" href="https://www.springer.com/gp/book/9783319029505" target="_blank" rel="noreferrer">Explore book</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M5 4h11a2 2 0 0 1 2 2v12H7a2 2 0 0 0-2 2V4z"/>
+                    <path d="M7 18h11" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Thesis monograph</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Numerically exact dynamics</h3>
+                <p>Precision solvers for driven many‑body systems and correlated bosons.</p>
+                <a class="card__link" href="https://www.springer.com/gp/book/9783319029505" target="_blank" rel="noreferrer">Explore book</a>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">MCTDH-X</div>
-            <h3>Open-source many-body simulation toolkit</h3>
-            <p>Co-created the MCTDH-X codebase enabling laboratories to model strongly correlated bosons with reproducible, numerically exact workflows. Extensive documentation and active community.</p>
-            <a class="card__link" href="https://mlxtk.readthedocs.io/en/latest/" target="_blank" rel="noreferrer">Documentation</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M10 3v6.5l-4.5 7.8A2.5 2.5 0 0 0 8 21h8a2.5 2.5 0 0 0 2.5-3.7L14 9.5V3" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">MCTDH-X</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Many‑body simulation toolkit</h3>
+                <p>Reproducible workflows for strongly correlated bosons. Active docs/community.</p>
+                <a class="card__link" href="https://mlxtk.readthedocs.io/en/latest/" target="_blank" rel="noreferrer">Documentation</a>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">EU UNIQORN</div>
-            <h3>Quantum-secure networking demonstrators</h3>
-            <p>Pioneered photonic hardware-in-the-loop experiments for the UNIQORN consortium, pairing telecom resilience with quantum information guarantees across European institutions.</p>
-            <a class="card__link" href="https://cordis.europa.eu/project/id/820474" target="_blank" rel="noreferrer">Project overview</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M12 5a7 7 0 1 1-7 7" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <path d="M16 2l6 6" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">EU UNIQORN</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Quantum‑secure demonstrators</h3>
+                <p>Photonic HIL experiments pairing telecom resilience with quantum guarantees.</p>
+                <a class="card__link" href="https://cordis.europa.eu/project/id/820474" target="_blank" rel="noreferrer">Project overview</a>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">Ultracold atoms</div>
-            <h3>UNIQORN simulation framework</h3>
-            <p>Contributed to the UNIQORN simulation and visualization framework for ultracold quantum systems, enabling accessible exploration of many-body dynamics.</p>
-            <a class="card__link" href="http://ultracold.org/menu/index.php?option=com_content&view=article&id=28:about-uniqorn&catid=16&Itemid=103" target="_blank" rel="noreferrer">Learn more</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <circle cx="12" cy="12" r="2"/>
+                    <ellipse cx="12" cy="12" rx="9" ry="4" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(60 12 12)"/>
+                    <ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-60 12 12)"/>
+                  </svg>
+                </div>
+                <div class="card__label">Ultracold atoms</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>UNIQORN framework</h3>
+                <p>Simulation and visualization for ultracold quantum systems.</p>
+                <a class="card__link" href="http://ultracold.org/menu/index.php?option=com_content&view=article&id=28:about-uniqorn&catid=16&Itemid=103" target="_blank" rel="noreferrer">Learn more</a>
+              </div>
+            </div>
           </article>
         </div>
       </div>
@@ -172,4 +247,3 @@
   </footer>
 </body>
 </html>
-

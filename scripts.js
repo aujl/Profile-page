@@ -225,6 +225,33 @@
     return card;
   }
 
+  function initFlipCards() {
+    const cards = document.querySelectorAll('.card.flip');
+    if (!cards.length) return;
+    cards.forEach((card) => {
+      const inner = card.querySelector('.card__inner');
+      if (!inner) return;
+      let timer = null;
+      const enter = () => {
+        if (prefersReducedMotion) { card.classList.add('is-flipped'); return; }
+        clearTimeout(timer);
+        timer = setTimeout(() => card.classList.add('is-flipped'), 500);
+      };
+      const leave = () => {
+        clearTimeout(timer);
+        card.classList.remove('is-flipped');
+      };
+      card.addEventListener('mouseenter', enter);
+      card.addEventListener('mouseleave', leave);
+      card.addEventListener('focusin', enter);
+      card.addEventListener('focusout', leave);
+      // Tap to toggle on touch
+      card.addEventListener('touchstart', () => {
+        card.classList.toggle('is-flipped');
+      }, { passive: true });
+    });
+  }
+
   async function populateRepositories() {
     const grids = document.querySelectorAll('[data-github-grid]');
     if (!grids.length) return;
@@ -272,7 +299,7 @@
     initParticleBackground();
     initNav();
     initTypedHeadline();
+    initFlipCards();
     populateRepositories();
   });
 })();
-

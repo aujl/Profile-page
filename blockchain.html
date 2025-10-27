@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="glitch-cards.css" />
   <script src="scripts.js" defer></script>
 </head>
 <body class="site site--projects">
@@ -52,25 +53,69 @@
           <p class="section__lead">Specialized expertise in oracle design, validator operations, DevOps, and quantitative market data systems.</p>
         </header>
         <div class="card-grid card-grid--dual">
-          <article class="card">
-            <div class="card__label">Oracle Architecture</div>
-            <h3>Institutional oracle blueprints</h3>
-            <p>Design and deployment of redundant market data pipelines, benchmark testing frameworks, and governance dashboards for institutional asset listings.</p>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M7.5 13.5l3-3M10 6l-4 4a4 4 0 0 0 0 5.7 4 4 0 0 0 5.7 0l4-4a4 4 0 0 0 0-5.7 4 4 0 0 0-5.7 0" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Oracle Architecture</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Institutional oracle blueprints</h3>
+                <p>Redundant data pipelines, benchmarks, and governance dashboards for listings.</p>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">Validator Operations</div>
-            <h3>Node infrastructure & DevOps</h3>
-            <p>High-availability validator setup, monitoring, failover strategies, and operational excellence for mainnet deployments across multiple blockchains.</p>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Validator Operations</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Node infrastructure & DevOps</h3>
+                <p>HA validators, monitoring, and failover for mainnet deployments.</p>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">Market Data</div>
-            <h3>Quantitative data pipelines</h3>
-            <p>Cross-chain market data exporters, risk analytics systems, and deterministic schemas for institutional treasury and risk management.</p>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M4 18h16M5 15l3-3 4 4 6-7" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Market Data</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Quantitative data pipelines</h3>
+                <p>Exporters, risk analytics, and deterministic schemas for institutions.</p>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">Quantitative Analysis</div>
-            <h3>Protocol and market research</h3>
-            <p>On-chain telemetry analysis, stablecoin transparency metrics, governance voting research, and protocol-level risk assessment.</p>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M4 18h16M7 18V9M12 18V5M17 18v-7" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Quantitative Analysis</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Protocol and market research</h3>
+                <p>Telemetry, transparency metrics, governance research, and risk assessment.</p>
+              </div>
+            </div>
           </article>
         </div>
       </div>
@@ -84,17 +129,40 @@
           <p class="section__lead">Selected utilities maintained under Blocksize Capital engineering accounts.</p>
         </header>
         <div class="card-grid card-grid--dual">
-          <article class="card">
-            <div class="card__label">Solana</div>
-            <h3>Solana market data exporter</h3>
-            <p>High-throughput pipeline aligning Solana RPC snapshots with institutional risk systems via deterministic schemas. Production deployment.</p>
-            <a class="card__link" href="https://github.com/Blocksize-Capital-GmbH/SolanaExporter" target="_blank" rel="noreferrer">View repository</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <path d="M13 2L6 13h5l-1 9 7-11h-5l1-9z"/>
+                  </svg>
+                </div>
+                <div class="card__label">Solana</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Solana market data exporter</h3>
+                <p>Aligns RPC snapshots with institutional risk systems via schemas.</p>
+                <a class="card__link" href="https://github.com/Blocksize-Capital-GmbH/SolanaExporter" target="_blank" rel="noreferrer">View repository</a>
+              </div>
+            </div>
           </article>
-          <article class="card">
-            <div class="card__label">Supra</div>
-            <h3>Supra oracle exporter</h3>
-            <p>Normalizes Supra oracle feeds for treasury analytics, featuring configurable drift alarms, policy logging, and institutional reporting.</p>
-            <a class="card__link" href="https://github.com/Blocksize-Capital-GmbH/SupraExporter" target="_blank" rel="noreferrer">View repository</a>
+          <article class="card flip">
+            <div class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="card__symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" aria-label="">
+                    <circle cx="12" cy="10" r="6"/>
+                    <path d="M6 20h12" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="card__label">Supra</div>
+              </div>
+              <div class="card__face card__face--back">
+                <h3>Supra oracle exporter</h3>
+                <p>Normalizes feeds for treasury analytics; drift alarms and reporting.</p>
+                <a class="card__link" href="https://github.com/Blocksize-Capital-GmbH/SupraExporter" target="_blank" rel="noreferrer">View repository</a>
+              </div>
+            </div>
           </article>
         </div>
       </div>
@@ -142,4 +210,3 @@
   </footer>
 </body>
 </html>
-
