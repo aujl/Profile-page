@@ -43,11 +43,11 @@
       }
 
       updateVelocityTowardsMouse() {
-        // Gently attract particles toward the mouse with damping and speed cap
+        // Repel particles from the mouse (negative mass effect) with damping and speed cap
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.max(Math.hypot(dx, dy), minDistance);
-        const strength = 0.015 * this.size; // attraction factor
+        const strength = -0.02 * this.size; // negative mass: push away from mouse
         this.vx += (dx / dist) * strength;
         this.vy += (dy / dist) * strength;
 
