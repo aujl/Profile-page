@@ -829,6 +829,31 @@ a:focus-visible {
     pointer-events: auto;
   }
 
+  .hero {
+    grid-template-columns: 1fr;
+    column-gap: clamp(16px, 8vw, 40px);
+    justify-items: center;
+  }
+
+  .hero__col--left,
+  .hero__col--right {
+    grid-column: 1;
+    width: min(100%, 520px);
+  }
+
+  .hero__col--right {
+    align-items: stretch;
+  }
+
+  .hero__text {
+    text-align: left;
+    width: 100%;
+  }
+
+  .hero__text > div {
+    margin-inline: 0 !important;
+  }
+
   .repo-card dl {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
