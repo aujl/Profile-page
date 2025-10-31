@@ -286,10 +286,13 @@
       const inner = card.querySelector('.card__inner');
       if (!inner) return;
       let timer = null;
+      const isHeroCard = card.classList.contains('hero-card');
+      const flipDelay = isHeroCard ? 0 : 500;
+
       const enter = () => {
         if (prefersReducedMotion) { card.classList.add('is-flipped'); return; }
         clearTimeout(timer);
-        timer = setTimeout(() => card.classList.add('is-flipped'), 500);
+        timer = setTimeout(() => card.classList.add('is-flipped'), flipDelay);
       };
       const leave = () => {
         clearTimeout(timer);
